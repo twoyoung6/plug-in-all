@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html style="font-size: 100px">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title></title>
+    <script>
+        var html = document.getElementsByTagName('html')[0];
+        var width = window.innerWidth;
+        var fontSize = 100/750*width;
+        html.style.fontSize = fontSize +'px';
+        window.onresize = function(){
+            var html = document.getElementsByTagName('html')[0];
+            var width = window.innerWidth;
+            var fontSize = 100/750 * width;
+            html.style.fontSize = fontSize +'px';
+        }
+    </script>
+    <style>
+        body,html{
+            margin: 0;
+            padding : 0;
+        }
+        div{
+            width: 2rem;
+            height: 2rem;
+            background: red;
+            color: #fff;
+            font-size: 0.16rem;
+        }
+    </style>
+</head>
+<body>
+    <div>AAA</div>
+</body>
+</html>
