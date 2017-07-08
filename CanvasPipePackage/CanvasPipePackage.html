@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px dashed deepskyblue;
+        }
+    </style>
+    <script>
+        /**
+         * canvas 处理弧度与角度的函数
+         */
+        //弧度转角度
+        function toAngle(radian) {
+            return radian * 180 / Math.PI;
+        }
+        // 角度 转弧度
+        function toRadian(angle) {
+            return angle * Math.PI / 180;
+        }
+        /**
+         * canvas 绘制数据饼形图函数封装
+         * obj 画布对象
+         * arr 数据数组
+         */
+        var itcast = function (obj, arr) {
+            var sum = 0;
+            var ctx = obj.getContext('2d');
+            var rr = obj.width > obj.height ? obj.height : obj.width;
+            var x0 = obj.width / 2, y0 = obj.height / 2, r = parseInt((rr / 2) * 0.8);
+            arr.forEach(function (v) {
+                sum += v;
+            });
+            var colors = 'tomato,turquoise,violet,yellowgreen,wheat,firebrick,whitesmoke,yellow,'.split(',');
+            var start = -90;
+            for (var i = 0; i < arr.length; i++) {
+                var angle = arr[i] / sum * 360;
+                var padding = 10;
+                // 绘制饼
+                ctx.beginPath();
+                ctx.fillStyle = colors[i];
+                ctx.moveTo(x0, y0);
+                ctx.arc(x0, y0, r, toRadian(start), toRadian(start + angle));
+                ctx.closePath();
+                ctx.fill();
+
+                // 绘制直线
+                ctx.beginPath();
+                ctx.font = '15px yahei';
+                ctx.fillStyle = '#000';
+                ctx.moveTo(x0, y0);
+                var x1 = x0 + (r + 30) * Math.cos(toRadian(start + angle / 2));
+                var y1 = y0 + (r + 30) * Math.sin(toRadian(start + angle / 2));
+                ctx.lineTo(x1, y1);
+                ctx.textAlign = 'center';
+                ctx.fillText(parseInt(arr[i] / sum * 100) + '%', x1 + padding, y1 + padding);
+                // 511行 的数据直线的坐标值计算不能写成 start+=angle ，这样 它的值会累加起来。越来越大
+                start += angle;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <canvas width='420' height="620" id="cas1"></canvas>
+    <script>
+        var cas1 = document.getElementById('cas1');
+        var arr = [110, 22, 5, 10, 46];
+        itcast(cas1, arr);
+    </script>
+    <canvas width='350' height="350" id="cas3"></canvas>
+
+    <!--封装函数实现具体数据饼型图-->
+    <script>
+        var cas3 = document.getElementById('cas3');
+        var arr = [11, 22, 33, 100, 12, 34, 56, 12];
+        itcast(cas3, arr);
+    </script>
+    <canvas width='420' height="420" id="cas"></canvas>
+    <script>
+            window.onload = function () {
+                var cas = document.getElementById('cas');
+                var arr = [110, 22, 5, 10, 62, 34, 46];
+                itcast(cas, arr);
+            }
+    </script>
+
+</body>
+
+</html>
