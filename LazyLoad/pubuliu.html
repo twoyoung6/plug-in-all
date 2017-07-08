@@ -1,0 +1,138 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>原生懒加载瀑布流效果</title>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #main {
+            position: relative;
+        }
+
+        #main div {
+            position: absolute;
+            transition: all 0.35s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script>
+      var lazyLoad = (function () {
+            function Lazy() {
+                var oMain = document.getElementById('main');
+                var ITEM_WIDTH = 240;
+                var ITEM_SPACE = 10;
+                var itemArray = [];
+                var itemHeight = [];
+
+                // 求随机数
+                function rand(min, max) {
+                    return parseInt(Math.random() * (max - min + 1) + min);
+                }
+
+                // 动态生成div DOM
+                function createItem(min, max) {
+                    for (var i = min; i < max; i++) {
+                        var div = document.createElement('div');
+                        div.innerHTML = i;
+                        div.style.height = rand(100, 300) + 'px';
+                        div.style.width = ITEM_WIDTH + 'px';
+                        div.style.backgroundColor = 'rgb(' + rand(0, 255) + ',' + rand(0, 255) + ',' + rand(0, 255) + ')';
+                        oMain.appendChild(div);
+                        itemArray[i] = div;
+                    }
+                    layout();
+                }
+
+                createItem(0, 30);
+
+                //div的布局
+                function layout() {
+                    var t = 0;
+                    var l = 0;
+                    var frist = true;
+                    var mainWidth = 0;
+                    var winWidth = document.documentElement.clientWidth || document.body.clientWidth;
+
+                    for (var i = 0; i < itemArray.length; i++) {
+                        if ((l + ITEM_WIDTH) >= winWidth) {
+                            frist = false;
+                            mainWidth = l;
+                            l = 0;
+                        }
+                        if (frist) {
+                            itemArray[i].style.top = t + 'px';
+                            itemArray[i].style.left = l + 'px';
+                            itemHeight[i] = itemArray[i].offsetHeight;
+                        } else {
+                            var min = getMin(itemHeight);
+                            for (var j = 0; j < itemHeight.length; j++) {
+                                if (itemHeight[j] == min) {
+                                    itemArray[i].style.top = min + ITEM_SPACE + 'px';
+                                    itemArray[i].style.left = j * (ITEM_WIDTH + ITEM_SPACE) + 'px';
+                                    itemHeight[j] += (itemArray[i].offsetHeight + ITEM_SPACE);
+                                    break;
+                                }
+                            }
+                        }
+                        l += ITEM_WIDTH + ITEM_SPACE;
+                    }
+                    // oMain居中
+                    var w = mainWidth - ITEM_SPACE;
+                    oMain.style.width = w + 'px';
+                    oMain.style.left = (winWidth - w) / 2 + 'px';
+
+                }
+
+
+                //求最小值
+                function getMin(aArray) {
+                    var min = aArray[0];
+                    for (var i = 0; i < aArray.length; i++) {
+                        if (min > aArray[i]) {
+                            min = aArray[i];
+                        }
+                    }
+                    return min;
+                }
+
+                window.onresize = function () {
+                    itemHeight = [];
+                    layout();
+                }
+
+
+                // 滚动滚动条达到最长的一个hight时，加载出更多
+                window.onscroll = function () {
+                    var scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+                    var winHeight = document.body.clientHeight || document.documentElement.clientHeight;
+                    var max = Math.max.apply(null, itemHeight);
+                    var num = 0;
+                    console.log(max);
+                    if ((scrollHeight + winHeight) >= max - 30) {
+                        num = itemArray.length;
+                        createItem(num, num + 10);
+                    }
+                }
+
+            }
+            return {
+                Lazy: Lazy
+            }
+        })();
+        lazyLoad.Lazy();
+    </script>
+</body>
+
+</html>
