@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>省市县三级联动</title>
+	<style type="text/css">
+		.layout {
+			width: 560px;
+			margin: 0 auto;
+		}
+
+		select {
+			padding: 5px;
+			margin: 0 5px;
+		}
+
+		option {
+			padding: 1px;
+		}
+	</style>
+	<script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function () {
+			//			封装异步请求数据函数，后面因为会有多次同样的数据请求
+			function query(obj, callback) {
+				$.ajax({
+					type: 'get',
+					url: './select.php',
+					dataType: 'json',
+					data: obj,
+					success: function (data) {
+						callback(data);
+					}
+				});
+			}
+			//			加载省级数据
+			query({ flag: 1 }, function (data) {
+				var option = '';
+				//					console.log(data);
+				$.each(data, function (i, e) {
+					option += '<option value="' + e.id + '">' + e.province + '</option>';
+				});
+				$('#province').append(option);
+			});
+			//  选中省级数据则请求加载市级数据
+			$('#province').change(function () {
+				$('#city').find('option').remove();
+				$('#county').find('option').remove();
+				query({ flag: 2, pId: $(this).val() }, function (data) {
+					var option = '';
+					//					console.log(data);
+					$.each(data, function (i, e) {
+						option += '<option value="' + e.id + '">' + e.city + '</option>';
+					});
+					$('#city').append(option);
+				});
+			});
+			// 选中市级请求县级数据
+			$('#city').change(function () {
+				$('#county').find('option').remove();
+				query({ flag: 3, cId: $(this).val() }, function (data) {
+					var option = '';
+					//					console.log(data);
+					$.each(data, function (i, e) {
+						option += '<option value="' + e.id + '">' + e.county + '</option>';
+					});
+					$('#county').append(option);
+				});
+			});
+		})
+	</script>
+</head>
+
+<body>
+	<div class="layout">
+		<label for="">省</label>
+		<select name="" id="province">
+				<option value="">请选择省...</option>
+		</select><label for="">市</label>
+		<select name="" id="city">
+				<option value="">请选择市...</option>
+		</select>
+		<label for="">县</label>
+		<select name="" id="county">
+				<option value="">请选择县...</option>
+		</select>
+	</div>
+</body>
+
+</html>
