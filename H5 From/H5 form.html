@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>H5表单作业</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <style>
+        .row {
+            padding: 0 15px;
+        }
+
+        form {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .row input {
+            display: block;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            width: 100%;
+            height: 30px;
+            line-height: 24px;
+            border-radius: 5px;
+            outline: none;
+            background: transparent;
+            box-shadow: none;
+            border: 1px solid #000000;
+
+        }
+
+        label {
+            color: #446584;
+        }
+
+        meter {
+            width: 100%;
+            height: 14px;
+            line-height: 12px;
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="tools/bootstrap-3.3.7-dist/css/bootstrap.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <form action="#.info">
+            <label for="username">姓名:</label>
+            <!--oninvalid="this.setCustomValidity('姓名只支持中文哦')"-->
+            <input type="text" name="username" id="username" placeholder="仅限中文汉字" required
+                   pattern="^[\u4e00-\u9fa5]{0,}$" oninvalid="this.setCustomValidity('姓名只支持中文哦')"/>
+            <label for="score">身份证号码:</label>
+            <input type="text" name="card" required pattern="^([0-9]){7,18}(x|X)?$"/>
+            <label for="tel">手机号:</label>
+            <input type="text" name="tel" id="tel" required
+                   pattern="^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$"
+                   autocomplete="on"/>
+            <label for="email">邮箱地址:</label>
+            <input type="text" name="email" id="email" required
+                   pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"/>
+            <label for="school">所属学院:</label>
+            <input type="text" name="school" id="school" required pattern="^[\u4e00-\u9fa5]{4,}$" autocomplete/>
+            <label for="score">入学成绩:</label>
+            <input type="number" max="100" min="0" value="0" id="score" name="score" required pattern="\d"/>
+            <label for="level">基础水平:</label>
+            <meter value="" id="level" max="100" high="89" low="59"></meter>
+            <label for="datestart">入学日期:</label>
+            <input type="date" id="datestart"/>
+            <label for="datego">毕业日期:</label>
+            <input type="date" id="datego"/>
+            <input type="submit" value="填完了"/>
+        </form>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    document.getElementById("score").oninput = function () {
+        document.getElementById("level").value = this.value;
+    }
+    /*oninput();输入内容改变事件*/
+</script>
+</html>
