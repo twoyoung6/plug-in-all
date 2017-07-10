@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="tools/jquery-1.12.2.min.js"></script>
+    <title>Document</title>
+    <style>
+        /*ul {
+            list-style: none;
+        }*/
+
+        li {
+            font: 30px/1 'simsun';
+            float: left;
+            margin: 0 2px;
+            color: crimson
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+
+    </div>
+    <script>
+        $('.box').html('<ul><li>♡</li><li>♡</li><li>♡</li><li>♡</li><li>♡</li></ul>');
+        $(function () {
+            var isClick = false;
+            $('.box ul').css({ "listStyle": "none" });
+            // $('box li').css({ "font-size": "24", "float": "left", "margin": "0 2", "color": "crimson" });
+            $('.box li').mouseover(function () {
+                if (!isClick) {
+                    $(this).text('♥').prevAll('li').text('♥').end().nextAll('li').text('♡');
+                }
+            }).mouseout(function () {
+                $('.box li').text('♡');
+                $('.box').find('li[index=1]').text('♥').prevAll('li').text('♥');
+            }).click(function () {
+                $(this).text('♥').prevAll('li').text('♥').end().attr('index', '1').siblings('li').removeAttr('index').end().nextAll('li').text('♡');
+                $('box li').off('click');
+                isClick = true;
+            })
+        })
+    </script>
+</body>
+
+</html>
